@@ -4,15 +4,8 @@ import mongoose from "mongoose";
 const MONGODB_URI = process.env.MONGODB_URI!;
 
 if (!MONGODB_URI) {
-  console.error(
-    "MONGODB_URI is missing. Available environment variables:",
-    Object.keys(process.env)
-  );
-  throw new Error(
-    "Please define the MONGODB_URI environment variable in Railway dashboard. " +
-      "Current NODE_ENV: " +
-      process.env.NODE_ENV
-  );
+  console.log("Available environment variables:", Object.keys(process.env));
+  throw new Error("Please define MONGODB_URI in Railway environment variables");
 }
 
 // Define the cached connection type
