@@ -1,60 +1,42 @@
-// src/lib/mongodb.ts - Fully Fixed Version
+// src/lib/mongodb.ts
+import "server-only";
 import mongoose from "mongoose";
 
-const MONGODB_URI = process.env.MONGODB_URI!;
-
-if (!MONGODB_URI) {
-  console.log("Available environment variables:", Object.keys(process.env));
-  throw new Error("Please define MONGODB_URI in Railway environment variables");
-}
-
-// Define the cached connection type
-interface CachedConnection {
+type Cached = {
   conn: typeof mongoose | null;
   promise: Promise<typeof mongoose> | null;
-}
+};
 
-// Extend global to include our mongoose cache
+// Use a non-conflicting global cache key
 declare global {
-  var mongoose: CachedConnection | undefined;
+  // eslint-disable-next-line no-var
+  var __mongoose: Cached | undefined;
 }
 
-// Initialize or use existing cached connection
-let cached: CachedConnection = global.mongoose || { conn: null, promise: null };
+const cached: Cached = global.__mongoose ?? { conn: null, promise: null };
+if (!global.__mongoose) global.__mongoose = cached;
 
-if (!global.mongoose) {
-  global.mongoose = cached;
-}
+export default async function dbConnect() {
+  if (cached.conn) return cached.conn;
 
-async function dbConnect(): Promise<typeof mongoose> {
-  // Return existing connection if available
-  if (cached.conn) {
-    return cached.conn;
+  // Read env only when actually connecting
+  const uri = process.env.MONGODB_URI || process.env.MONGO_URL; // optional fallback
+  if (!uri) {
+    throw new Error("Missing MONGODB_URI");
   }
 
-  // Create new connection if no promise exists
   if (!cached.promise) {
-    const opts = {
-      bufferCommands: false,
-      maxPoolSize: 10,
-      serverSelectionTimeoutMS: 5000,
-      socketTimeoutMS: 45000,
-    };
-
-    cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
-      console.log("Connected to MongoDB");
-      return mongoose;
-    });
+    cached.promise = mongoose
+      .connect(uri, {
+        dbName: process.env.MONGODB_DB, // optional
+        bufferCommands: false,
+        maxPoolSize: 10,
+        serverSelectionTimeoutMS: 5000,
+        socketTimeoutMS: 45000,
+      })
+      .then((m) => m);
   }
 
-  try {
-    cached.conn = await cached.promise;
-  } catch (e) {
-    cached.promise = null;
-    throw e;
-  }
-
+  cached.conn = await cached.promise;
   return cached.conn;
 }
-
-export default dbConnect;
