@@ -1,13 +1,20 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    serverActions: true,
-  },
-  // Optimize for production
+  // Remove this entire experimental block - Server Actions are stable now
+  // experimental: {
+  //   serverActions: true,  // This is causing the error
+  // },
+
+  // Production optimizations
   compress: true,
   poweredByHeader: false,
+
   // Railway specific settings
   output: "standalone",
+
+  // Add these for better deployment stability
+  trailingSlash: false,
+  skipTrailingSlashRedirect: true,
 };
 
-module.exports = nextConfig;
+export default nextConfig;
