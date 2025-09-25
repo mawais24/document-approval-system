@@ -1,0 +1,47 @@
+version: "3.8"
+
+services:
+  # MongoDB Database
+  mongodb:
+    image: mongo:6.0
+    container_name: approval-system-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: document-approval
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password123
+    volumes:
+      - mongodb_data:/data/db
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    networks:
+      - approval-network
+
+  # Next.js Application (for development)
+  app:
+    build: .
+    container_name: approval-system-app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - MONGODB_URI=mongodb://appuser:apppass123@mongodb:27017/document-approval
+      - NODE_ENV=development
+      - NEXTAUTH_SECRET=your-super-secret-key-change-this-in-production
+      - JWT_SECRET=your-jwt-secret-key-change-this-too
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - ./uploads:/app/uploads
+    depends_on:
+      - mongodb
+    networks:
+      - approval-network
+
+volumes:
+  mongodb_data:
+
+networks:
+  approval-network:
+    driver: bridge
