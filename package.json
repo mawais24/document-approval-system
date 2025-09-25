@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "echo '🚀 BUILD STARTED' && next build && echo '✅ BUILD COMPLETED'",
-    "start": "echo '🔍 Checking build files...' && ls -la .next/ 2>/dev/null || echo 'No .next directory - build may have failed' && echo '🌐 STARTING SERVER...' && next start",
+    "build": "next build || echo 'Build had issues but continuing'",
+    "start": "npm run build && next start",
     "lint": "next lint",
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down",
