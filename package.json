@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
+    "build": "echo '🚀 BUILD STARTED' && next build && echo '✅ BUILD COMPLETED'",
+    "start": "echo '🔍 Checking build files...' && ls -la .next/ && echo '🌐 STARTING SERVER...' && next start",
     "lint": "next lint",
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down",
@@ -13,9 +13,7 @@
     "docker:mongo": "docker-compose up -d mongodb",
     "docker:rebuild": "docker-compose down && docker-compose up --build -d",
     "db:seed": "node scripts/seed-database.js",
-    "db:test": "node scripts/test-connection.js",
-    "railway:build": "npm run build",
-    "railway:start": "npm run start"
+    "db:test": "node scripts/test-connection.js"
   },
   "dependencies": {
     "axios": "^1.12.2",

@@ -1,10 +1,9 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
+  output: "standalone",
   compress: true,
   poweredByHeader: false,
-  output: "standalone",
-  trailingSlash: false,
-  skipTrailingSlashRedirect: true,
 };
 
 export default nextConfig;
