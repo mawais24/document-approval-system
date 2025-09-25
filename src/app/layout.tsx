@@ -3,10 +3,6 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
-export const dynamic = "force-dynamic"; // don't pre-render at build
-export const revalidate = 0; // no ISR
-export const fetchCache = "force-no-store"; // ensure fetches don't cache at build
-
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
