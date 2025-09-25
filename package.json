@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "echo '🚀 BUILD STARTED' && next build && echo '✅ BUILD COMPLETED'",
-    "start": "npm run build && next start",
+    "start": "echo '🔍 Checking build files...' && ls -la .next/ && echo '🌐 STARTING SERVER...' && next start",
     "lint": "next lint",
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down",
