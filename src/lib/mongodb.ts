@@ -18,13 +18,26 @@ if (!global.__mongoose) global.__mongoose = cached;
 export default async function dbConnect() {
   if (cached.conn) return cached.conn;
 
-  // Use Railway's built-in MONGO_URL only
-  const uri = process.env.MONGO_URL;
-  if (!uri) {
-    throw new Error("Missing MONGO_URL - check Railway MongoDB service");
+  // Build connection string from Railway's individual MongoDB variables
+  const host = process.env.MONGOHOST;
+  const port = process.env.MONGOPORT;
+  const user = process.env.MONGOUSER;
+  const password = process.env.MONGOPASSWORD;
+  const prebuiltUrl = process.env.MONGO_URL;
+
+  let uri: string;
+
+  if (prebuiltUrl) {
+    uri = prebuiltUrl;
+  } else if (host && port && user && password) {
+    uri = `mongodb://${user}:${password}@${host}:${port}`;
+  } else {
+    throw new Error(
+      "Missing MongoDB connection details. Need either MONGO_URL or MONGOHOST, MONGOPORT, MONGOUSER, MONGOPASSWORD"
+    );
   }
 
-  console.log("Connecting to MongoDB with Railway built-in MONGO_URL");
+  console.log("Connecting to MongoDB...");
 
   if (!cached.promise) {
     cached.promise = mongoose

@@ -5,9 +5,11 @@ import { AuthUtils } from "@/lib/auth";
 export const runtime = "nodejs";
 
 console.log("=== ENVIRONMENT DEBUG ===");
+console.log("MONGOHOST exists:", !!process.env.MONGOHOST);
+console.log("MONGOPORT exists:", !!process.env.MONGOPORT);
+console.log("MONGOUSER exists:", !!process.env.MONGOUSER);
+console.log("MONGOPASSWORD exists:", !!process.env.MONGOPASSWORD);
 console.log("MONGO_URL exists:", !!process.env.MONGO_URL);
-console.log("MONGO_URL value:", process.env.MONGO_URL ? "SET" : "NOT SET");
-console.log("MONGO_PUBLIC_URL exists:", !!process.env.MONGO_PUBLIC_URL);
 console.log("========================");
 
 export async function POST(request: NextRequest) {
