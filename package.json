@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "echo '🚀 BUILD STARTED' && next build && echo '✅ BUILD COMPLETED'",
+    "build": "NODE_OPTIONS='--max-old-space-size=768' next build",
     "start": "npm run build && next start",
     "lint": "next lint",
     "docker:up": "docker-compose up -d",
@@ -33,6 +33,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@next/bundle-analyzer": "^15.5.4",
     "@tailwindcss/postcss": "^4",
     "@types/bcryptjs": "^2.4.6",
     "@types/jsonwebtoken": "^9.0.10",

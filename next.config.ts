@@ -1,18 +1,30 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  output: "standalone",
-  compress: true,
-  poweredByHeader: false,
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  typescript: {
-    ignoreBuildErrors: true,
-  },
-  // Add this to prevent DB connections during build
+  productionBrowserSourceMaps: false,
   experimental: {
-    esmExternals: true,
+    workerThreads: false,
+    cpus: 1,
+  },
+  webpack: (config: any) => {
+    config.optimization.splitChunks = {
+      chunks: "all",
+      maxInitialRequests: 1,
+      maxAsyncRequests: 1,
+      cacheGroups: {
+        default: {
+          minChunks: 1,
+          priority: -20,
+          reuseExistingChunk: true,
+        },
+        vendors: {
+          test: /[\\/]node_modules[\\/]/,
+          priority: -10,
+          reuseExistingChunk: true,
+        },
+      },
+    };
+    return config;
   },
 };
 
