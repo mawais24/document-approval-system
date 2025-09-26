@@ -4,14 +4,20 @@ import { User } from "@/models/User";
 import { AuthUtils } from "@/lib/auth";
 export const runtime = "nodejs";
 
-// Temporary debug - add at the very beginning
 console.log("=== ENVIRONMENT DEBUG ===");
 console.log("NODE_ENV:", process.env.NODE_ENV);
-console.log("MONGODB_URI exists:", !!process.env.MONGODB_URI);
-console.log("MONGODB_URI value:", process.env.MONGODB_URI ? "SET" : "NOT SET");
+console.log("DATABASE_URL exists:", !!process.env.DATABASE_URL);
 console.log(
-  "All MONGO vars:",
-  Object.keys(process.env).filter((key) => key.includes("MONGO"))
+  "DATABASE_URL value:",
+  process.env.DATABASE_URL ? "SET" : "NOT SET"
+);
+console.log("MONGODB_URI exists:", !!process.env.MONGODB_URI);
+console.log("MONGO_URL exists:", !!process.env.MONGO_URL);
+console.log(
+  "All env vars with MONGO or DATABASE:",
+  Object.keys(process.env).filter(
+    (key) => key.includes("MONGO") || key.includes("DATABASE")
+  )
 );
 console.log("========================");
 
