@@ -19,10 +19,13 @@ if (!global.__mongoose) global.__mongoose = cached;
 export default async function dbConnect() {
   if (cached.conn) return cached.conn;
 
-  // Read env only when actually connecting
-  const uri = process.env.MONGODB_URI || process.env.MONGO_URL; // optional fallback
+  // Read env only when actually connecting - now using DATABASE_URL first
+  const uri =
+    process.env.DATABASE_URL ||
+    process.env.MONGODB_URI ||
+    process.env.MONGO_URL;
   if (!uri) {
-    throw new Error("Missing MONGODB_URI");
+    throw new Error("Missing DATABASE_URL, MONGODB_URI, or MONGO_URL");
   }
 
   if (!cached.promise) {
