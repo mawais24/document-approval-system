@@ -6,6 +6,9 @@ const nextConfig: NextConfig = {
     workerThreads: false,
     cpus: 1,
   },
+  // Ensure app listens on all interfaces for Railway
+  output: process.env.RAILWAY_ENVIRONMENT ? "standalone" : undefined,
+
   webpack: (config: any) => {
     config.optimization.splitChunks = {
       chunks: "all",
