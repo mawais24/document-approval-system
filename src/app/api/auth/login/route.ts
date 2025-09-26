@@ -4,6 +4,17 @@ import { User } from "@/models/User";
 import { AuthUtils } from "@/lib/auth";
 export const runtime = "nodejs";
 
+// Temporary debug - add at the very beginning
+console.log("=== ENVIRONMENT DEBUG ===");
+console.log("NODE_ENV:", process.env.NODE_ENV);
+console.log("MONGODB_URI exists:", !!process.env.MONGODB_URI);
+console.log("MONGODB_URI value:", process.env.MONGODB_URI ? "SET" : "NOT SET");
+console.log(
+  "All MONGO vars:",
+  Object.keys(process.env).filter((key) => key.includes("MONGO"))
+);
+console.log("========================");
+
 export async function POST(request: NextRequest) {
   try {
     await dbConnect();
