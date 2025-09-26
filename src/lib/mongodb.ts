@@ -7,7 +7,6 @@ type Cached = {
   promise: Promise<typeof mongoose> | null;
 };
 
-// Use a non-conflicting global cache key
 declare global {
   // eslint-disable-next-line no-var
   var __mongoose: Cached | undefined;
@@ -19,19 +18,17 @@ if (!global.__mongoose) global.__mongoose = cached;
 export default async function dbConnect() {
   if (cached.conn) return cached.conn;
 
-  // Read env only when actually connecting - now using DATABASE_URL first
-  const uri =
-    process.env.DATABASE_URL ||
-    process.env.MONGODB_URI ||
-    process.env.MONGO_URL;
+  // Use Railway's built-in MONGO_URL only
+  const uri = process.env.MONGO_URL;
   if (!uri) {
-    throw new Error("Missing DATABASE_URL, MONGODB_URI, or MONGO_URL");
+    throw new Error("Missing MONGO_URL - check Railway MongoDB service");
   }
+
+  console.log("Connecting to MongoDB with Railway built-in MONGO_URL");
 
   if (!cached.promise) {
     cached.promise = mongoose
       .connect(uri, {
-        dbName: process.env.MONGODB_DB, // optional
         bufferCommands: false,
         maxPoolSize: 10,
         serverSelectionTimeoutMS: 5000,
